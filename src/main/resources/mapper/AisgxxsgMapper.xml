@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rx.allbackstage.mapper.AisgxxsgMapper">
+
+    <!--List<Taibookcasenew> GetNewByMid(String mid,String bookclass);-->
+    <select id="GetNewByMid" resultType="com.rx.allbackstage.entity.aisg.entity.Taibookcasenew">
+        select cid, bookname, `read`, bookauthor, bookhouse, bookclass, bookabout, booktime, bookimage, bookthumb, mid, intime
+        from t_aibookcase_new
+        where mid=#{mid} and bookclass=#{bookclass}
+    </select>
+
+    <!--List<Taibookcasenew> GetNewByID(Long id);-->
+    <select id="GetNewByID" resultType="com.rx.allbackstage.entity.aisg.entity.Taibookcasenew">
+        select cid, bookname, `read`, bookauthor, bookhouse, bookclass, bookabout, booktime, bookimage, bookthumb, mid, intime
+        from t_aibookcase_new
+        where cid=#{id}
+    </select>
+
+    <!--int PostNew(Taibookcasenew taibookcasenew);-->
+    <insert id="PostNew" useGeneratedKeys="true" keyProperty="cid">
+        INSERT INTO t_aibookcase_new (
+            bookname, bookauthor,bookhouse,bookclass,bookabout,booktime,bookimage,mid
+        ) VALUES (
+                     #{bookname}, #{bookauthor}, #{bookhouse},#{bookclass},#{bookabout},#{booktime},#{bookimage},#{mid}
+                 )
+    </insert>
+
+    <!--int GetNew();-->
+    <delete id="GetNew" >
+        DELETE FROM t_aibookcase_new
+    </delete>
+
+    <!--int GetdelNewByID(Long ids);-->
+    <delete id="GetdelNewByID" >
+        DELETE FROM t_aibookcase_new where cid=#{ids}
+    </delete>
+
+    <!--int PostBuyFromUser(Taibookcaserequestuser taibookcaserequestuser);-->
+    <insert id="PostBuyFromUser" useGeneratedKeys="true" keyProperty="cid">
+        INSERT INTO t_aibookcase_request_user (
+            bookname, bookauthor,bookhouse,bookclass,bookabout,booktime,bookimage,bookthumb
+        ) VALUES (
+                     #{bookname}, #{bookauthor}, #{bookhouse},#{bookclass},#{bookabout},#{booktime},#{bookimage},#{bookthumb}
+                 )
+    </insert>
+
+    <!--int PostBuyFromUserWhithID(Long id);-->
+    <insert id="PostBuyFromUserWhithID">
+        INSERT INTO t_aibookcase_request_user (bookname, bookauthor,bookhouse,bookclass,bookabout,booktime,bookimage,bookthumb)
+        SELECT bookname,bookauthor,bookhouse,bookclass,bookabout,booktime,bookimage,bookthumb
+        from t_aibookcase_supplier b where b.cid=#{id}
+    </insert>
+
+
+    <!--int PostBuyToOnShelf(Long cid,String mid);-->
+    <insert id="PostBuyToOnShelf">
+        INSERT INTO t_aibookcase_new (bookname,bookauthor,bookhouse,bookclass,bookabout,booktime,bookimage,bookthumb,mid)
+        SELECT bookname,bookauthor,bookhouse,bookclass,bookabout,booktime,bookimage,bookthumb,#{mid}
+        from t_aibookcase_request_user b where b.cid=#{cid}
+    </insert>
+    <!--int updateonShelf(Long cid);-->
+    <update id="updateonShelf">
+        update t_aibookcase_request_user set onShelf=1 where cid=#{cid}
+    </update>
+
+    <!--int PostBuyToOnShelfAuto(Long cid,String mid);-->
+    <insert id="PostBuyToOnShelfAuto">
+        INSERT INTO t_aibookcase_new (bookname,bookauthor,bookhouse,bookclass,bookabout,booktime,bookimage,bookthumb,mid)
+        SELECT bookname,bookauthor,bookhouse,bookclass,bookabout,booktime,bookimage,bookthumb,#{mid}
+        from t_aibookcase_request_auto b where b.cid=#{cid}
+    </insert>
+    <!--int updateOnShelfAuto(Long cid);-->
+    <update id="updateOnShelfAuto">
+        update t_aibookcase_request_auto set onShelf=1 where cid=#{cid}
+    </update>
+
+    <!--int GetBuyFromUser();-->
+    <delete id="GetBuyFromUser" >
+        DELETE FROM t_aibookcase_request_user
+    </delete>
+
+
+    <!--int GetBuyByID1(Long id);-->
+    <delete id="GetBuyByID1" >
+        DELETE FROM t_aibookcase_request_user where cid=#{id}
+    </delete>
+    <!--int GetBuyByID0(Long id);-->
+    <delete id="GetBuyByID0" >
+        DELETE FROM t_aibookcase_request_auto where cid=#{id}
+    </delete>
+
+    <!--int PostBuyFromAuto(Taibookcaserequestauto taibookcaserequestauto);-->
+    <insert id="PostBuyFromAuto" useGeneratedKeys="true" keyProperty="cid">
+        INSERT INTO t_aibookcase_request_auto (
+            bookname, bookauthor,bookhouse,bookclass,bookabout,booktime,bookimage,bookthumb
+        ) VALUES (
+                     #{bookname}, #{bookauthor}, #{bookhouse},#{bookclass},#{bookabout},#{booktime},#{bookimage},#{bookthumb}
+                 )
+    </insert>
+
+    <!--int GetDelBuyFromAuto();-->
+    <delete id="GetDelBuyFromAuto" >
+        DELETE FROM t_aibookcase_request_auto
+    </delete>
+
+    <!--List<Taibookcaserequestuser> GetBuy1(Long id);-->
+    <select id="GetBuy1" resultType="com.rx.allbackstage.entity.aisg.entity.Taibookcaserequestuser">
+        select *
+        from t_aibookcase_request_user
+    </select>
+    <!--List<Taibookcaserequestuser> GetBuy0();-->
+    <select id="GetBuy0" resultType="com.rx.allbackstage.entity.aisg.entity.Taibookcaserequestuser">
+        select *
+        from t_aibookcase_request_auto
+    </select>
+
+    <!--List<Taibookcaserequestuser>  GetdelBuyByID1(Long id);-->
+    <select id="GetdelBuyByID1" resultType="com.rx.allbackstage.entity.aisg.entity.Taibookcaserequestuser">
+        select *
+        from t_aibookcase_request_user
+        where cid=#{id}
+    </select>
+    <!--List<Taibookcaserequestuser> GetdelBuyByID0(Long id);-->
+    <select id="GetdelBuyByID0" resultType="com.rx.allbackstage.entity.aisg.entity.Taibookcaserequestuser">
+        select *
+        from t_aibookcase_request_auto
+        where cid=#{id}
+    </select>
+
+
+
+    <!--List<TaibookcaseVO> PostSearchByMid0(String bookName,String mid);-->
+    <select id="PostSearchByMid0" resultType="com.rx.allbackstage.entity.aisg.vo.TaibookcaseVO">
+        select id,bookname,bookauthor,bookhouse,bookclass,bookabout,booktime,bookimage,intime
+        from aisql.t_aibookcase_common
+        where mid=#{mid} and bookname LIKE  concat('%',#{bookName},'%');
+    </select>
+    <!--List<TaibookcaseVO> PostSearchByMid1(String bookName,String mid);-->
+    <select id="PostSearchByMid1" resultType="com.rx.allbackstage.entity.aisg.vo.TaibookcaseVO">
+        select cid,bookname,bookauthor,bookhouse,bookclass,bookabout,booktime,bookimage,intime
+        from aisql.t_aibookcase_new
+        where mid=#{mid} and bookname LIKE  concat('%',#{bookName},'%');
+    </select>
+    <!--List<TaibookcaseVO> PostSearchByMid2(String bookName,String mid);-->
+    <select id="PostSearchByMid2" resultType="com.rx.allbackstage.entity.aisg.vo.TaibookcaseVO">
+        select id,bookname,bookauthor,bookhouse,bookclass,bookabout,booktime,bookimage,intime
+        from aisql.t_aibookcase_recommended
+        where mid=#{mid} and bookname LIKE  concat('%',#{bookName},'%');
+    </select>
+    <!--List<TaibookcaseVO> PostSearchByMid3(String bookName,String mid);-->
+    <select id="PostSearchByMid3" resultType="com.rx.allbackstage.entity.aisg.vo.TaibookcaseVO">
+        select cid,bookname,bookauthor,bookhouse,bookclass,bookabout,booktime,bookimage,intime
+        from aisql.t_aibookcase_supplier
+        where bookname LIKE  concat('%',#{bookName},'%');
+    </select>
+    <!--List<TaibookcaseVO> PostSearchByMid4(String bookName,String mid);-->
+    <select id="PostSearchByMid4" resultType="com.rx.allbackstage.entity.aisg.vo.TaibookcaseVO">
+        select id,bookname,bookauthor,bookhouse,bookclass,bookabout,booktime,bookimage,intime
+        from aisql.t_aibookcase_message
+        where mid=#{mid} and bookname LIKE  concat('%',#{bookName},'%');
+    </select>
+    <!--List<TaibookcaseVO> PostSearchByMid5(String bookName,String mid);-->
+    <select id="PostSearchByMid5" resultType="com.rx.allbackstage.entity.aisg.vo.TaibookcaseVO">
+        select cid,bookname,bookauthor,bookhouse,bookclass,bookabout,booktime,bookimage,intime
+        from aisql.t_aibookcase_request_user
+        where bookname LIKE  concat('%',#{bookName},'%');
+    </select>
+
+</mapper>

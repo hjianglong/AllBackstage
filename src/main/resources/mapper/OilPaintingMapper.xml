@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rx.allbackstage.mapper.OilPaintingMapper">
+
+    <!--List<Yhpoilpainting> searchImage(int pageindex,int pagesize);-->
+    <select id="searchImage" resultType="com.rx.allbackstage.entity.yhp.entiey.Yhpoilpainting">
+        select *
+        from aisql.yhp_oilpainting LIMIT #{pageindex},#{pagesize};
+    </select>
+    <!--int searchImagecount();-->
+    <select id="searchImagecount" resultType="String">
+        select count(cid)
+        from aisql.yhp_oilpainting
+    </select>
+
+    <!--List<YhpOilPanintingmid> SpecifiedMachineData(String mid);-->
+    <select id="SpecifiedMachineData" resultType="com.rx.allbackstage.entity.yhp.entiey.YhpOilPanintingmid">
+        select cid,img,filetype,intime
+        from yhp_oilpainting_mid where mid=#{mid}
+    </select>
+
+    <!--List<Yhpoilpainting> specifiedData();-->
+    <select id="specifiedData" resultType="com.rx.allbackstage.entity.yhp.entiey.Yhpoilpainting">
+        select *
+        from yhp_oilpainting where cid=#{cid}
+    </select>
+
+    <!--List<YhpOilPanintingmid> customLibrary();-->
+    <select id="customLibrary" resultType="com.rx.allbackstage.entity.yhp.entiey.YhpOilPanintingmid">
+        select *
+        from yhp_oilpainting_mid where cid=#{cid}
+    </select>
+
+    <!--int GetMIDByID(String ids);-->
+    <delete id="GetMIDByID" >
+            DELETE FROM yhp_oilpainting_mid WHERE cid=#{cid}
+    </delete>
+
+    <!--List<YhpOilPanintingmid> GetOCRByID(String cid);-->
+    <select id="GetOCRByID" resultType="com.rx.allbackstage.entity.yhp.entiey.YhpOilPanintingmid">
+        select *
+        from yhp_oilpainting_mid where cid=#{cid}
+    </select>
+
+    <!--int PostNewPub(Yhpoilpainting yhpoilpainting);-->
+    <insert id="PostNewPub" useGeneratedKeys="true" keyProperty="cid">
+        INSERT INTO aisql.yhp_oilpainting (
+            img, filetype,description,contentCategory,username
+        ) VALUES (
+                     #{img}, #{filetype}, #{description},#{contentCategory},#{username}
+                 )
+    </insert>
+
+    <!--int PostNewPub2(Yhpoilpainting yhpoilpainting);-->
+    <insert id="PostNewPub2" useGeneratedKeys="true" keyProperty="cid">
+        INSERT INTO aisql.yhp_oilpainting (img, filetype)
+        VALUES ( #{img}, #{filetype} )
+    </insert>
+
+    <!--int PostNewWithMID(YhpOilPanintingmid yhpOilPanintingmid);-->
+    <insert id="PostNewWithMID" useGeneratedKeys="true" keyProperty="cid">
+        INSERT INTO aisql.yhp_oilpainting_mid (img, mid,filetype)
+        VALUES ( #{img},#{mid}, #{filetype} )
+    </insert>
+
+    <!--int PostOCRKeys(Long cid , String keys);-->
+    <update id="PostOCRKeys">
+        UPDATE yhp_oilpainting_ocr
+        set `keys`=#{keys}
+        WHERE cid=#{cid}
+    </update>
+
+    <!--List<Yhpaimin> list();-->
+    <select id="list" resultType="com.rx.allbackstage.entity.yhp.entiey.Yhpaimin">
+        select cid,mid,mname,m_order,remark,intime,gongneng
+        from yhp_ai_mid where casetype=2
+    </select>
+
+    <!--int GetByID(Long ids);-->
+    <delete id="GetByID" >
+        DELETE FROM aisql.yhp_oilpainting WHERE cid in (
+        <foreach collection="array" item="ids" separator=",">
+            #{ids}
+        </foreach>
+            )
+    </delete>
+
+    <!--String GetBKByID(Long cid);-->
+    <select id="GetBKByID" resultType="String">
+        select bk
+        from yhp_oilpainting_bk where cid=#{cid}
+    </select>
+
+    <!--List<Yhpoilpaintingbk> GetBKAll();-->
+    <select id="GetBKAll" resultType="com.rx.allbackstage.entity.yhp.entiey.Yhpoilpaintingbk">
+        select * from yhp_oilpainting_bk
+    </select>
+
+    <!--int PostBK(Yhpoilpaintingbk yhpoilpaintingbk);-->
+    <insert id="PostBK" useGeneratedKeys="true" keyProperty="cid">
+        INSERT INTO aisql.yhp_oilpainting_bk (bk, forocr)
+        VALUES ( #{bk},#{forocr})
+    </insert>
+
+    <!--int GetBk(Long[] ids);-->
+    <delete id="GetBk" >
+        DELETE FROM aisql.yhp_oilpainting_bk WHERE cid in (
+        <foreach collection="array" item="ids" separator=",">
+            #{ids}
+        </foreach>
+        )
+    </delete>
+
+    <!--String GetBKMidByID(Long cid);-->
+    <select id="GetBKMidByID" resultType="String">
+        select bk
+        from yhp_oilpainting_bk_mid where cid=#{cid}
+    </select>
+
+    <!--List<YhpoilpaintingbkmidVO> GetBKMIDAll(String mid);-->
+    <select id="GetBKMIDAll" resultType="com.rx.allbackstage.entity.yhp.vo.YhpoilpaintingbkmidVO">
+        select cid,bk,forocr,intime
+        from yhp_oilpainting_bk_mid where mid=#{mid}
+    </select>
+
+    <!--int PostBKMID(Yhpoilpaintingbkmid yhpoilpaintingbkmid);-->
+    <insert id="PostBKMID" useGeneratedKeys="true" keyProperty="cid">
+        INSERT INTO aisql.yhp_oilpainting_bk_mid (bk, mid ,forocr)
+        VALUES ( #{bk},#{mid},#{forocr})
+    </insert>
+
+    <!--int GetBkMID(Long[] ids);-->
+    <delete id="GetBkMID" >
+        DELETE FROM aisql.yhp_oilpainting_bk_mid WHERE cid in (
+        <foreach collection="array" item="ids" separator=",">
+            #{ids}
+        </foreach>
+        )
+    </delete>
+
+    <!--int PostKeyImg(Yhpoilpaintingkeyimg yhpoilpaintingkeyimg);-->
+    <insert id="PostKeyImg" useGeneratedKeys="true" keyProperty="cid">
+        INSERT INTO aisql.yhp_oilpainting_keyimg (img, objectkey ,filetype)
+        VALUES ( #{img},#{objectkey},#{filetype})
+    </insert>
+
+    <!-- int getObjectkey(String keyword);-->
+    <insert id="getObjectkey" >
+        INSERT into yhp_oilsubkeyword (keyword)
+        VALUE (#{objectkey})
+    </insert>
+
+    <!--List<Yhpoilpaintingkeyimg> GetAllKeyImg();-->
+    <select id="GetAllKeyImg" resultType="com.rx.allbackstage.entity.yhp.entiey.Yhpoilpaintingkeyimg">
+        select *
+        from yhp_oilpainting_keyimg
+    </select>
+
+    <!--List<YhpoilpaintingkeyimgVO> GetAllKeyImgByKeys(String keys);-->
+    <select id="GetAllKeyImgByKeys" resultType="com.rx.allbackstage.entity.yhp.vo.YhpoilpaintingkeyimgVO">
+        select cid, img, intime, filetype
+        from yhp_oilpainting_keyimg where objectkey=#{keys}
+    </select>
+
+    <!--int GetKeyImgByID(Long ids);-->
+    <delete id="GetKeyImgByID" >
+        DELETE FROM yhp_oilpainting_keyimg WHERE cid in (
+        <foreach collection="array" item="ids" separator=",">
+            #{ids}
+        </foreach>
+        )
+    </delete>
+
+    <!--List<YhpoilpaintingthemeVO> GetTheme();-->
+    <select id="GetTheme" resultType="com.rx.allbackstage.entity.yhp.vo.YhpoilpaintingthemeVO">
+        select id, themeName, themeType, createTime, keywords, fenleiid, moshi, qiehuanshijian
+        from aisql.yhp_oilpainting_theme
+    </select>
+
+    <!--List<YhpoilpaintingthemeVO> GetThemeWithPage(int pageindex,int pagesize);-->
+    <select id="GetThemeWithPage" resultType="com.rx.allbackstage.entity.yhp.vo.YhpoilpaintingthemeVO">
+        select id, themeName, themeType, createTime, keywords, fenleiid, moshi, qiehuanshijian
+        from aisql.yhp_oilpainting_theme LIMIT #{pageindex},#{pagesize}
+    </select>
+    <!--String GetThemeWithPagecount();-->
+    <select id="GetThemeWithPagecount" resultType="String">
+        select count(id)
+        from aisql.yhp_oilpainting_theme
+    </select>
+
+    <!--int GetthemeDel(Long id);-->
+    <delete id="GetthemeDel" >
+        DELETE FROM aisql.yhp_oilpainting_theme WHERE id=#{id}
+    </delete>
+
+    <!--int GetThemeid(Long themeid);-->
+    <delete id="GetThemeid" >
+        DELETE FROM aisql.yhp_oilpainting_theme_pic WHERE themeid=#{id}
+    </delete>
+
+    <!--int Postthemeadd(Yhpoilpaintingtheme yhpoilpaintingtheme);-->
+    <insert id="Postthemeadd" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO aisql.yhp_oilpainting_theme (
+            themeName ,themeType ,createTime ,keywords ,fenleiid ,moshi ,qiehuanshijian
+        )
+        VALUES ( #{themeName},#{themeType},#{createTime},#{keywords},#{fenleiid},#{moshi},#{qiehuanshijian})
+    </insert>
+
+    <!--int PostthemeChange(Long id,String themeName,Long themeType,String keywords,Long fenleiid,String moshi,String qiehuanshijian);-->
+    <update id="PostthemeChange">
+        UPDATE aisql.yhp_oilpainting_theme
+        set `themeName`=#{themeName},`themeType`=#{themeType},`keywords`=#{keywords},`fenleiid`=#{fenleiid},`moshi`=#{moshi},`qiehuanshijian`=#{qiehuanshijian}
+        WHERE id=#{id}
+    </update>
+
+    <!--int postthemepicChange(Long id,String keywords);-->
+    <update id="postthemepicChange">
+        UPDATE aisql.yhp_oilpainting_theme_pic
+        set `keywords`=#{keywords}
+        WHERE themeid=#{id}
+    </update>
+
+    <!--List<YhpoilpaintingGetthemepicVO> GetThemePic(String cid);-->
+    <select id="GetThemePic" resultType="com.rx.allbackstage.entity.yhp.vo.YhpoilpaintingGetthemepicVO">
+        select themeName, themeType, createTime, keywords, fenleiid, moshi, qiehuanshijian,a.img
+        from aisql.yhp_oilpainting_theme lift join aisql.yhp_oilpainting a
+        where id=#{cid}
+    </select>
+
+
+    <!--List<YhpaiminoilpaintingthemeVO> GetEquipTheme();-->
+    <select id="GetEquipTheme" resultType="com.rx.allbackstage.entity.yhp.vo.YhpaiminoilpaintingthemeVO">
+        select id, themeName, themeType, themePic, createTime, keywords, yhp_ai_mid.cid, yhp_ai_mid.mname, yhp_ai_mid.mid, yhp_ai_mid.themeid
+        from aisql.yhp_oilpainting_theme   join aisql.yhp_ai_mid
+    </select>
+
+    <!--int PostoilThemeChange(String mid , Long themeid);-->
+    <update id="PostoilThemeChange">
+        UPDATE aisql.yhp_ai_mid
+        set `themeId`=#{themeid}
+        WHERE mid=#{mid}
+    </update>
+
+    <!--int PostAlloilTheme(Long themeid);-->
+    <update id="PostAlloilTheme">
+        UPDATE aisql.yhp_ai_mid
+        set `themeId`=#{themeid}
+        WHERE aisql.yhp_ai_mid.casetype=2
+    </update>
+
+
+
+
+    <!--int PostThemePicKeyword(Long theme_id , Long pic_id , String keyword);-->
+    <update id="PostThemePicKeyword">
+        UPDATE yhp_oilpainting_theme_pic
+        set `keywords`=#{keyword}
+        WHERE themeid=#{theme_id} and picid=#{pic_id}
+    </update>
+
+    <!--int PostUserMaterials(Yhpoilpaintingupload yhpoilpaintingupload);-->
+    <insert id="PostUserMaterials" useGeneratedKeys="true" keyProperty="cid">
+        INSERT INTO aisql.yhp_oilpainting_upload (
+            username , filepath , filetype , description
+        )
+        VALUES ( #{username},#{filepath},#{filetype},#{description})
+    </insert>
+
+
+
+    <!--List<Yhpoilpaintingupload> GetUserMaterials(Long pageIndex,Long pageSize);-->
+    <select id="GetUserMaterials" resultType="com.rx.allbackstage.entity.yhp.entiey.Yhpoilpaintingupload">
+        select *
+        from yhp_oilpainting_upload LIMIT #{pageIndex},#{pageSize}
+    </select>
+    <!--String GetUserMaterialscount();-->
+    <select id="GetUserMaterialscount" resultType="String">
+        select count(cid)
+        from yhp_oilpainting_upload
+    </select>
+
+    <!--int PostUserMaterialsCheck(Long cid , Long checkstatus);-->
+    <update id="PostUserMaterialsCheck">
+        UPDATE yhp_oilpainting_upload
+        set `checkstatus`=#{checkstatus}
+        WHERE cid=#{cid}
+    </update>
+    <!--int Postzizeng(Long cid);-->
+    <insert id="Postzizeng">
+        INSERT INTO aisql.yhp_oilpainting (img,filetype,username,description)
+        SELECT filepath,filetype,username,description from yhp_oilpainting_upload where cid=#{cid} and checkstatus=1
+    </insert>
+
+    <!--int DeleteUserMaterials(Long cid);-->
+    <delete id="DeleteUserMaterials" >
+        DELETE FROM aisql.yhp_oilpainting_upload WHERE cid=#{cid}
+    </delete>
+
+    <!--int Get(Long id,String themeName,Long themeType,String keywords,Long fenleiid,String moshi,String qihuanshijian);-->
+    <update id="Get">
+        UPDATE yhp_oilpainting_theme
+        set `themeName`=#{themeName},`themeType`=#{themeType},
+            `keywords`=#{keywords},`fenleiid`=#{fenleiid},`moshi`=#{moshi},`qiehuanshijian`=#{qiehuanshijian}
+        WHERE id=#{id}
+    </update>
+    <!--int GetPic(Long themeid,String keywords);-->
+    <update id="GetPic">
+        UPDATE yhp_oilpainting_theme_pic
+        set `keywords`=#{keywords}
+        WHERE themeid=#{id}
+    </update>
+
+    <!--List<Yhpoilpaintingtimes> GetOilpaintingSet();-->
+    <select id="GetOilpaintingSet" resultType="com.rx.allbackstage.entity.yhp.entiey.Yhpoilpaintingtimes">
+        select *
+        from yhp_oilpainting_times
+    </select>
+
+    <!--int PostOilpaintingSet(Yhpoilpaintingtimes yhpoilpaintingtimes);-->
+    <update id="PostOilpaintingSet">
+        UPDATE yhp_oilpainting_times
+        set `id`=#{id},`booktime`=#{booktime},`papertime`=#{papertime},`papermove`=#{papermove},
+            `qktime`=#{qktime},`oiltime`=#{oiltime},`oilspeed1`=#{oilspeed1},`oilspeed2`=#{oilspeed2},
+            `oilspeed3`=#{oilspeed3},`papername`=#{papername},`noticetime`=#{noticetime},`noticespeed`=#{noticespeed},
+            `videotime`=#{videotime},`volume`=#{volume},`light`=#{light},`dztmoshi`=#{dztmoshi},
+            `xztmoshi`=#{xztmoshi},`imgmoshi`=#{imgmoshi},`res4`=#{res4},`res5`=#{res5},`res6`=#{res6},
+            `res7`=#{res7},`res8`=#{res8},`res9`=#{res9},`res10`=#{res10}
+        WHERE id=#{id}
+    </update>
+
+    <!--int PostFenlei(Yhpoilpaintingfenlei yhpoilpaintingfenlei);-->
+    <insert id="PostFenlei" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO aisql.yhp_oilpainting_fenlei (
+           fenlei, fenleishunxu, hunbe, fenleishijian, bofangzhuti, zhutishijian
+        )
+        VALUES ( #{fenlei},#{fenleishunxu},#{hunbe},#{fenleishijian},#{bofangzhuti},#{zhutishijian})
+    </insert>
+
+    <!--List<Yhpoilpaintingfenlei> GetFenlei(Long pageindex,Long pagesize);-->
+    <select id="GetFenlei" resultType="com.rx.allbackstage.entity.yhp.entiey.Yhpoilpaintingfenlei">
+        select *
+        from aisql.yhp_oilpainting_fenlei LIMIT #{pageindex},#{pagesize}
+    </select>
+    <!--String GetFenleicount();-->
+    <select id="GetFenleicount" resultType="String">
+        select count(id)
+        from aisql.yhp_oilpainting_fenlei
+    </select>
+
+    <!--List<Yhpoilpaintingfenlei> GetFenleiByID(Long fenleiID);-->
+    <select id="GetFenleiByID" resultType="com.rx.allbackstage.entity.yhp.entiey.Yhpoilpaintingfenlei">
+        select fenlei, fenleishunxu, hunbe, fenleishijian, bofangzhuti, zhutishijian
+        from aisql.yhp_oilpainting_fenlei WHERE id=#{fenleiID}
+    </select>
+
+
+    <!--int UpdateFenleiAllField(Yhpoilpaintingfenlei yhpoilpaintingfenlei);-->
+    <update id="UpdateFenleiAllField">
+        UPDATE yhp_oilpainting_fenlei
+        set `id`=#{id},`fenlei`=#{fenlei},`fenleishunxu`=#{fenleishunxu},`hunbe`=#{hunbe},`fenleishijian`=#{fenleishijian},
+            `bofangzhuti`=#{bofangzhuti},`zhutishijian`=#{zhutishijian}
+        WHERE id=#{id}
+    </update>
+
+    <!--int DeleteFenlei(Long fenleiID);-->
+    <delete id="DeleteFenlei" >
+        DELETE FROM yhp_oilpainting_fenlei WHERE id=#{fenleiID}
+    </delete>
+
+    <!--int FenleiBindingZhuti(Long fenleiID,Long zhutiID);-->
+    <update id="FenleiBindingZhuti">
+        UPDATE aisql.yhp_oilpainting_theme
+        set aisql.yhp_oilpainting_theme.`fenleiid`=#{fenleiID}
+        WHERE id=#{zhutiID}
+    </update>
+
+    <!--List<Yhpoilpaintingtheme> GetZhutiOfFenlei(Long fenleiID, Long pageIndex, Long pageSize);-->
+    <select id="GetZhutiOfFenlei" resultType="com.rx.allbackstage.entity.yhp.entiey.Yhpoilpaintingtheme">
+        select *
+        from yhp_oilpainting_theme
+        where fenleiid=#{fenleiID}
+        LIMIT #{pageIndex},#{pageSize}
+    </select>
+
+</mapper>
